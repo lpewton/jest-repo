@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 
-const { game, newGame, addTurn, lightsOn } = require("../js/script.js");
+const { game, newGame, addTurn, lightsOn, showTurns } = require("../js/script.js");
 
 beforeAll(() => {
     let fs = require("fs");
@@ -24,6 +24,9 @@ describe("game object contains correct keys", () => {
     });
     test("choices key exists", () => {
         expect("choices" in game).toBe(true);
+    });
+    test("turnNumber key exists", () => {
+        expect("turnNumber" in game).toBe(true);
     });
     test("choices contains the correct IDs", () => {
         expect(game.choices).toEqual(["button1", "button2", "button3", "button4"]);
@@ -50,6 +53,12 @@ describe("newGame works correctly", () => {
     test("Should display 0 for the element with ID of score", () => {
         expect(document.getElementById("score").innerText).toEqual(0);
     })
+    test("Expect data-listener to be true", () => {
+        const elements = document.getElementsByClassName("circle");
+        for (let element of elements) {
+            expect(element.getAttribute("data-listener")).toEqual("true");
+        }
+    })
 });
 
 describe("Gameplay works correctly", () => {
@@ -72,5 +81,10 @@ describe("Gameplay works correctly", () => {
         let button = document.getElementById(game.currentGame[0]);
         lightsOn(game.currentGame[0]);
         expect(button.classList).toContain("light");
+    })
+    test("showTurns should update game.turnNumber", () => {
+        game.turnNumber = 42;
+        showTurns();
+        expect(game.turnNumber).toBe(0);
     })
 });
